@@ -25,7 +25,7 @@ public class FlashCardsRecyclerViewCursorAdapter extends RecyclerView.Adapter<Fl
     private final Context mContext;
     private final FlashCardsRecyclerViewCursorAdapterOnClickListener flashCardsRecyclerViewCursorAdapterOnClickListener;
 
-    public FlashCardsRecyclerViewCursorAdapter(Context context,FlashCardsRecyclerViewCursorAdapterOnClickListener flashCardsRecyclerViewCursorAdapterOnClickListener){
+    public FlashCardsRecyclerViewCursorAdapter(Context context, FlashCardsRecyclerViewCursorAdapterOnClickListener flashCardsRecyclerViewCursorAdapterOnClickListener){
         mContext = context;
         this.flashCardsRecyclerViewCursorAdapterOnClickListener=flashCardsRecyclerViewCursorAdapterOnClickListener;
     }
@@ -98,22 +98,17 @@ public class FlashCardsRecyclerViewCursorAdapter extends RecyclerView.Adapter<Fl
             int position = getAdapterPosition();
             mCursor.moveToPosition(position);
 
-            /*int IDIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry._ID);
+            int idIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry._ID);
             int topicNameIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry.FLASH_CARD_TOPIC_NAME);
             int questionIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry.FLASH_CARD_QUESTION);
             int answerIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry.FLASH_CARD_ANSWER);
 
-            int contentID = mCursor.getInt(IDIndex);
+            int id = mCursor.getInt(idIndex);
             String topicName = mCursor.getString(topicNameIndex);
             String question = mCursor.getString(questionIndex);
-            String answer = mCursor.getString(answerIndex);*/
+            String answer = mCursor.getString(answerIndex);
 
-            //This code needed to be common to the Delete functions in both showFlashCard and ShowFlashCardDetails activities,
-            //So moved it to FlashCard Class, public access as getFlashCardFromCursor() static function.
-
-
-//            flashCardsRecyclerViewCursorAdapterOnClickListener.onFlashCardClicked(new FlashCard(contentID, topicName, question, answer));
-            flashCardsRecyclerViewCursorAdapterOnClickListener.onFlashCardClicked(FlashCard.getFlashCardFromCursor(mCursor));
+            flashCardsRecyclerViewCursorAdapterOnClickListener.onFlashCardClicked(new FlashCard(id, topicName,question,answer));
         }
     }
 }

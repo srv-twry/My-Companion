@@ -38,14 +38,27 @@
                 android:layout_marginStart="2dp"
                 android:background="@color/md_divider_black"/>
 
-            <TextView
-                android:id="@+id/tv_flash_card_detail_question"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:padding="4dp"
-                android:textSize="16sp"
-                tools:text="Question"/>
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edittext_flash_card_detail_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    tools:text="Question"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/tv_flash_card_detail_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    tools:text="Question" />
+            </FrameLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -74,14 +87,27 @@
                 android:layout_marginStart="2dp"
                 android:background="@color/md_divider_black"/>
 
-            <TextView
-                android:id="@+id/tv_flash_card_detail_answer"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:padding="4dp"
-                android:textSize="16sp"
-                tools:text="Answer"/>
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_flash_card_detail_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    tools:text="Answer" />
+                <EditText
+                    android:id="@+id/edittext_flash_card_detail_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    tools:text="Answer"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
             <View
                 android:layout_width="match_parent"

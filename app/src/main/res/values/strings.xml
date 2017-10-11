@@ -59,6 +59,8 @@
     <string name="both_the_fields_are_mandatory">Both the fields are mandatory !</string>
     <string name="created_the_flash_card_successfully">Created the flash card successfully</string>
     <string name="unable_to_create_the_card">Unable to create the card</string>
+    <string name="updated_the_flash_card_successfully">Updated the flash card successfully</string>
+    <string name="unable_to_update_the_card">Unable to update the card</string>
     <string name="please_enter_the_topic_name">Please enter the topic name !</string>
     <string name="topic_should_not_have_more_than_35_characters">Topic shouldn\'t have more than 35 characters !</string>
     <string name="created_the_topic_successfully">Created the topic successfully</string>
@@ -101,4 +103,6 @@
     <string name="camera">Camera</string>
     <string name="please_wait">Please Wait</string>
     <string name="creating_pdf_double_dot">Creating PDF...</string>
+    <string name="action_edit_card">Edit flash card</string>
+    <string name="action_save_card">Save flash card</string>
 </resources>

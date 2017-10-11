@@ -32,14 +32,14 @@ public class DatabaseContentProvider extends ContentProvider {
     private static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_CONTESTS,CONTESTS);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_SUBSCRIBED_CONTESTS,SUBSCRIBED_CONTESTS);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_SUBSCRIBED_CONTESTS +"/#",SUBSCRIBED_CONTESTS_INDIVIDUAL);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_FLASH_CARDS_TOPICS,FLASH_CARDS_TOPICS);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_FLASH_CARDS_TOPICS+"/#",FLASH_CARDS_TOPICS_INDIVIDUAL);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_FLASH_CARDS_TOPICS+"/*",FLASH_CARDS_TOPICS_INDIVIDUAL_BY_NAME);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_FLASH_CARDS,FLASH_CARDS);
-        uriMatcher.addURI(DatabaseContract.AUTHORITY,DatabaseContract.PATH_FLASH_CARDS+"/#",FLASH_CARDS_INDIVIDUAL);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_CONTESTS,CONTESTS);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_SUBSCRIBED_CONTESTS,SUBSCRIBED_CONTESTS);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_SUBSCRIBED_CONTESTS +"/#",SUBSCRIBED_CONTESTS_INDIVIDUAL);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_FLASH_CARDS_TOPICS,FLASH_CARDS_TOPICS);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_FLASH_CARDS_TOPICS+"/#",FLASH_CARDS_TOPICS_INDIVIDUAL);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_FLASH_CARDS_TOPICS+"/*",FLASH_CARDS_TOPICS_INDIVIDUAL_BY_NAME);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_FLASH_CARDS,FLASH_CARDS);
+        uriMatcher.addURI(DatabaseContract.AUTHORITY, DatabaseContract.PATH_FLASH_CARDS+"/#",FLASH_CARDS_INDIVIDUAL);
         return uriMatcher;
     }
 
@@ -176,7 +176,7 @@ public class DatabaseContentProvider extends ContentProvider {
 
             case FLASH_CARDS_TOPICS_INDIVIDUAL_BY_NAME:
                 stringIds = uri.getPathSegments().get(1);
-                itemsDeleted = db.delete(DatabaseContract.FlashCardsEntry.TABLE_NAME_FLASH_CARDS,DatabaseContract.FlashCardsEntry.FLASH_CARD_TOPIC_NAME+ "=?",new String[]{stringIds});
+                itemsDeleted = db.delete(DatabaseContract.FlashCardsEntry.TABLE_NAME_FLASH_CARDS, DatabaseContract.FlashCardsEntry.FLASH_CARD_TOPIC_NAME+ "=?",new String[]{stringIds});
                 if (itemsDeleted >0){
                     Log.v("ContentProvider ","Deleted id="+stringIds + " from the database");
                 }
@@ -200,6 +200,28 @@ public class DatabaseContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not implemented");
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        int itemsUpdated;
+        String stringIds;
+
+        int match = uriMatcher.match(uri);
+
+        switch (match){
+            case FLASH_CARDS_INDIVIDUAL:
+                stringIds = uri.getPathSegments().get(1);
+                itemsUpdated = db.update(
+                        DatabaseContract.FlashCardsEntry.TABLE_NAME_FLASH_CARDS,
+                        values,
+                        "_id=?",
+                        new String[]{stringIds});
+                Log.v("ContentProvider ","Updated id="+stringIds + " in the database");
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        if (itemsUpdated!=0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return itemsUpdated;
     }
 }
