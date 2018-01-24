@@ -3,11 +3,7 @@ package com.example.srv_twry.studentcompanion;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -27,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Adapters.FlashCardsTopicsRecyclerViewCursorAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
+import com.example.srv_twry.studentcompanion.Utilities.RecycleViewSwapUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +53,7 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
     TextView messageShowFlashCardTopics;
 
     private FlashCardsTopicsRecyclerViewCursorAdapter flashCardsTopicsRecyclerViewCursorAdapter;
-    private Paint p = new Paint();
+    private RecycleViewSwapUtils recycleViewSwapUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +70,10 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
         flashCardsRecyclerView.setLayoutManager(new GridLayoutManager(this,getResources().getInteger(R.integer.number_colums_grid_view_flash_topic)));
         flashCardsTopicsRecyclerViewCursorAdapter = new FlashCardsTopicsRecyclerViewCursorAdapter(FlashCardsHomeActivity.this,this);
         flashCardsRecyclerView.setAdapter(flashCardsTopicsRecyclerViewCursorAdapter);
+
+
+        //Instantiate the swap utils
+        recycleViewSwapUtils = new RecycleViewSwapUtils(this);
 
         //setUp fab button to add topics here.
         addFlashCardsFab.setOnClickListener(new View.OnClickListener() {
@@ -96,27 +97,9 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Bitmap icon;
-                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
+                recycleViewSwapUtils.drawDeleteIndicator(c, viewHolder, dX, actionState);
 
-                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
-                    p.setColor(getResources().getColor(R.color.flashCardsSwipeToDeleteBackground));
-                    if(dX > 0){
-                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + width ,(float) itemView.getTop() + width,(float) itemView.getLeft()+ 2*width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    } else {
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-                    }
-                }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 

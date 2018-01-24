@@ -3,6 +3,7 @@ package com.example.srv_twry.studentcompanion;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.example.srv_twry.studentcompanion.Adapters.FlashCardsRecyclerViewCursorAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.POJOs.FlashCard;
+import com.example.srv_twry.studentcompanion.Utilities.RecycleViewSwapUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +46,7 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
     TextView messageShowFlashCards;
     private FlashCardsRecyclerViewCursorAdapter flashCardsRecyclerViewCursorAdapter;
     private String topicName;
+    private RecycleViewSwapUtils recycleViewSwapUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,9 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
         flashCardsRecyclerViewCursorAdapter = new FlashCardsRecyclerViewCursorAdapter(ShowFlashCardsActivity.this,this);
         flashCardsRecyclerView.setAdapter(flashCardsRecyclerViewCursorAdapter);
 
+        //Instantiate the swap utils
+        recycleViewSwapUtils = new RecycleViewSwapUtils(this);
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
@@ -69,6 +75,13 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
             }
 
 
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                recycleViewSwapUtils.drawDeleteIndicator(c, viewHolder, dX, actionState);
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
