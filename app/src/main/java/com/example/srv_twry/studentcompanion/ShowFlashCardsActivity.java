@@ -3,6 +3,7 @@ package com.example.srv_twry.studentcompanion;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -15,7 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.DragAndDropPermissions;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.srv_twry.studentcompanion.Adapters.FlashCardsRecyclerViewCursorAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.POJOs.FlashCard;
+import com.example.srv_twry.studentcompanion.Utilities.RecycleViewSwapUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +46,7 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
     TextView messageShowFlashCards;
     private FlashCardsRecyclerViewCursorAdapter flashCardsRecyclerViewCursorAdapter;
     private String topicName;
+    private RecycleViewSwapUtils recycleViewSwapUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,9 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
         flashCardsRecyclerViewCursorAdapter = new FlashCardsRecyclerViewCursorAdapter(ShowFlashCardsActivity.this,this);
         flashCardsRecyclerView.setAdapter(flashCardsRecyclerViewCursorAdapter);
 
+        //Instantiate the swap utils
+        recycleViewSwapUtils = new RecycleViewSwapUtils(this);
+
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
@@ -70,43 +75,19 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
             }
 
 
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                recycleViewSwapUtils.drawDeleteIndicator(c, viewHolder, dX, actionState);
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                final int id = (int)viewHolder.itemView.getTag();
 
-                FlashCard.getFlashCardFromID(ShowFlashCardsActivity.this,id).deleteFromDB(ShowFlashCardsActivity.this, false);
-
-
-                /*//Show the alert dialog
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(ShowFlashCardsActivity.this);
-                alertDialog.setTitle(R.string.confirm_delete);
-                alertDialog.setMessage(R.string.are_you_sure_you_want_to_delete_this_card);
-                alertDialog.setIcon(R.drawable.ic_delete_black);
-
-                alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int which) {
-                    String idString = Integer.toString(id);
-                    Uri deleteFlashCardIndividual = DatabaseContract.FlashCardsEntry.CONTENT_URI_FLASH_CARDS.buildUpon().appendPath(idString).build();
-                    int itemsDeleted = getContentResolver().delete(deleteFlashCardIndividual,null,null);
-
-                    if (itemsDeleted >0 ){
-                        Toast.makeText(ShowFlashCardsActivity.this, R.string.card_deleted_successfully,Toast.LENGTH_SHORT).show();
-                        getSupportLoaderManager().restartLoader(FLASH_CARDS_LOADER_ID, null, ShowFlashCardsActivity.this);
-                    }else{
-                        Toast.makeText(ShowFlashCardsActivity.this, R.string.cannot_delete_card, Toast.LENGTH_SHORT).show();
-                    }
-                    }
-                });
-
-                alertDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                        getSupportLoaderManager().restartLoader(FLASH_CARDS_LOADER_ID, null, ShowFlashCardsActivity.this);
-                    }
-                });
-
-                alertDialog.show();*/
+//              Show the alert dialog
+                manageFlashCardAfterSwipe((int)viewHolder.itemView.getTag());
 
             }
         }).attachToRecyclerView(flashCardsRecyclerView);
@@ -123,6 +104,38 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
         //start the loader
         getSupportLoaderManager().initLoader(FLASH_CARDS_LOADER_ID, null, this);
 
+    }
+
+    private void manageFlashCardAfterSwipe(final int tagId){
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ShowFlashCardsActivity.this);
+        alertDialog.setTitle(R.string.confirm_delete);
+        alertDialog.setMessage(R.string.are_you_sure_you_want_to_delete_this_card);
+        alertDialog.setIcon(R.drawable.ic_delete_black);
+
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                String idString = Integer.toString(tagId);
+                Uri deleteFlashCardIndividual = DatabaseContract.FlashCardsEntry.CONTENT_URI_FLASH_CARDS.buildUpon().appendPath(idString).build();
+                int itemsDeleted = getContentResolver().delete(deleteFlashCardIndividual,null,null);
+
+                if (itemsDeleted >0 ){
+                    Toast.makeText(ShowFlashCardsActivity.this, R.string.card_deleted_successfully,Toast.LENGTH_SHORT).show();
+                    getSupportLoaderManager().restartLoader(FLASH_CARDS_LOADER_ID, null, ShowFlashCardsActivity.this);
+                }else{
+                    Toast.makeText(ShowFlashCardsActivity.this, R.string.cannot_delete_card, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        alertDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                getSupportLoaderManager().restartLoader(FLASH_CARDS_LOADER_ID, null, ShowFlashCardsActivity.this);
+            }
+        });
+
+        alertDialog.show();
     }
 
     @Override

@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 
 import com.example.srv_twry.studentcompanion.Adapters.ContestRecyclerViewAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
-import com.example.srv_twry.studentcompanion.Network.FetchContestsVolley;
+import com.example.srv_twry.studentcompanion.Network.FetchContestsRetrofit;
 import com.example.srv_twry.studentcompanion.POJOs.Contest;
 import com.example.srv_twry.studentcompanion.R;
 
@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
  * Use the {@link CodingCalendarListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CodingCalendarListFragment extends Fragment implements ContestRecyclerViewAdapter.ContestRecyclerViewOnClickListener, FetchContestsVolley.onLoadingFinishedListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class CodingCalendarListFragment extends Fragment implements ContestRecyclerViewAdapter.ContestRecyclerViewOnClickListener, FetchContestsRetrofit.onLoadingFinishedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CodingCalendarListFragment.class.getSimpleName();
     private static final String RECYCLERVIEW_POSITION = "recyclerView position";
@@ -96,7 +96,7 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
 
         //If the device is online then get the updated data from the server otherwise use the cached data from the database.
         if (isOnline()){
-            FetchContestsVolley fetchContestsVolley = new FetchContestsVolley(getContext(),this);
+            FetchContestsRetrofit fetchContestsVolley = new FetchContestsRetrofit(getContext(),this);
             fetchContestsVolley.fetchContest();
         }else{
             getDataFromDatabase();

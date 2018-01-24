@@ -8,14 +8,14 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.srv_twry.studentcompanion.Network.FetchContestsVolley;
+import com.example.srv_twry.studentcompanion.Network.FetchContestsRetrofit;
 
 /**
  * Created by srv_twry on 20/6/17.
  * The sync adapter for the coding calendar.
  */
 
-public class CodingCalendarSyncAdapter extends AbstractThreadedSyncAdapter implements FetchContestsVolley.onLoadingFinishedListener{
+public class CodingCalendarSyncAdapter extends AbstractThreadedSyncAdapter implements FetchContestsRetrofit.onLoadingFinishedListener{
 
     private final String TAG = CodingCalendarSyncAdapter.class.getSimpleName();
 
@@ -36,13 +36,13 @@ public class CodingCalendarSyncAdapter extends AbstractThreadedSyncAdapter imple
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        FetchContestsVolley fetchContestsVolley = new FetchContestsVolley(mContext,this);
+        FetchContestsRetrofit fetchContestsVolley = new FetchContestsRetrofit(mContext,this);
         fetchContestsVolley.fetchContest();
         // To see this log message kindly change the logcat view to no filters.
         Log.v(TAG,"SYNCING STARTED BUDDY, TAKE A CLOSER LOOK . THIS MSG IS BIG TO MAKE SURE I CAN NOTICE IT AMONG THE LARGE LOGS.");
     }
 
-    /*The interface method in the FetchContestsVolley class which sets the recycler view with the new data
+    /*The interface method in the FetchContestsRetrofit class which sets the recycler view with the new data
         Here it will not do anything useful other than logging.
     */
     @Override

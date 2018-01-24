@@ -3,57 +3,68 @@ package com.example.srv_twry.studentcompanion.Network;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
+import com.example.srv_twry.studentcompanion.Network.NetworkPOJOs.FeedPOJO;
+import com.example.srv_twry.studentcompanion.Network.NetworkPOJOs.ModelsPOJO;
 import com.example.srv_twry.studentcompanion.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
 
 /**
  * Created by srv_twry on 19/6/17.
  * The class which uses the volley library to fetch Contests from the Hackerrank's API
  */
 
-public class FetchContestsVolley {
-    private static RequestQueue requestQueue;
-    private static final String HACKERRANK_API_URL = "https://www.hackerrank.com/calendar/feed.json";
+public class FetchContestsRetrofit {
+    private static final String HACKERRANK_API_BASE_URL = "https://www.hackerrank.com";
+    private static final String CALENDAR_FEED_URL = "calendar/feed.json";
     private final Context context;
     private final onLoadingFinishedListener onLoadingFinishedListener;
+    private HackerrankService api;
 
-    public FetchContestsVolley(Context context,onLoadingFinishedListener onLoadingFinishedListener){
+    public FetchContestsRetrofit(Context context, onLoadingFinishedListener onLoadingFinishedListener){
         this.context=context;
         this.onLoadingFinishedListener= onLoadingFinishedListener;
-        requestQueue = Volley.newRequestQueue(context);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(HACKERRANK_API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        api = retrofit.create(HackerrankService.class);
     }
 
-    public  void fetchContest(){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, HACKERRANK_API_URL, null, new Response.Listener<JSONObject>() {
+    public void fetchContest(){
+
+        api.getFeed().enqueue(new Callback<ModelsPOJO>() {
             @Override
-            public void onResponse(JSONObject response) {
-                addToDatabase(response);
+            public void onResponse(@NonNull Call<ModelsPOJO> call, @NonNull Response<ModelsPOJO> response) {
+
+                addToDatabase(response.body().getModels());
                 onLoadingFinishedListener.onLoadingFinished();
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(@NonNull Call<ModelsPOJO> call, @NonNull Throwable t) {
+
                 Toast.makeText(context, R.string.check_your_internet_connection, Toast.LENGTH_SHORT).show();
             }
         });
-        requestQueue.add(jsonObjectRequest);
     }
 
     // Parse the JSON Response and add to database
-    private void addToDatabase(JSONObject response) {
-        try{
+    private void addToDatabase(List<FeedPOJO> response) {
             //deleting the previous table of contests
             Uri uri = DatabaseContract.ContestEntry.CONTENT_URI_CONTESTS;
             context.getContentResolver().delete(uri,null,null);
@@ -70,29 +81,25 @@ public class FetchContestsVolley {
             */
             //delete the code above this line after testing or comment it.
 
-            JSONArray models = response.getJSONArray("models");
             //The hackerrank API sorts contests in reverse order so reversing the array
-            for(int i=models.length()-1; i>=0; i--){
-                JSONObject obj = models.getJSONObject(i);
-                String title = obj.getString("title");
-                String description = obj.getString("description");
-                String start = obj.getString("start");
-                String end = obj.getString("end");
-                String url = obj.getString("url");
+            for(int i=response.size()-1; i>=0; i--){
 
                 ContentValues contentValues = new ContentValues();
-                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_TITLE,title);
-                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_DESCRIPTION,description);
-                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_URL,url);
-                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_START_TIME,start);
-                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_END_TIME,end);
+                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_TITLE, response.get(i).getTitle());
+                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_DESCRIPTION,response.get(i).getDescription());
+                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_URL,response.get(i).getUrl());
+                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_START_TIME,response.get(i).getStart());
+                contentValues.put(DatabaseContract.ContestEntry.CONTEST_COLUMN_END_TIME,response.get(i).getEnd());
 
                 //Adding the data to the database.
                 context.getContentResolver().insert(DatabaseContract.ContestEntry.CONTENT_URI_CONTESTS,contentValues);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    }
+
+    public interface HackerrankService {
+
+        @GET(CALENDAR_FEED_URL)
+        Call<ModelsPOJO> getFeed();
     }
 
     public interface onLoadingFinishedListener{
