@@ -7,4 +7,6 @@
     <color name="materialRed">#E74C3C</color>
     <color name="materialOrange">#E67E22</color>
     <color name="materialYellow">#F1C40F</color>
+
+    <color name="flashCardsSwipeToDeleteBackground">#D32F2F</color>
 </resources>

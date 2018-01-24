@@ -3,6 +3,7 @@ package com.example.srv_twry.studentcompanion;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Adapters.FlashCardsTopicsRecyclerViewCursorAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
+import com.example.srv_twry.studentcompanion.Utilities.RecycleViewSwapUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +54,8 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
 
     private FlashCardsTopicsRecyclerViewCursorAdapter flashCardsTopicsRecyclerViewCursorAdapter;
 
+    private RecycleViewSwapUtils recycleViewSwapUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,8 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
         flashCardsRecyclerView.setLayoutManager(new GridLayoutManager(this,getResources().getInteger(R.integer.number_colums_grid_view_flash_topic)));
         flashCardsTopicsRecyclerViewCursorAdapter = new FlashCardsTopicsRecyclerViewCursorAdapter(FlashCardsHomeActivity.this,this);
         flashCardsRecyclerView.setAdapter(flashCardsTopicsRecyclerViewCursorAdapter);
+
+        recycleViewSwapUtils = new RecycleViewSwapUtils(this);
 
         //setUp fab button to add topics here.
         addFlashCardsFab.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +92,14 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                recycleViewSwapUtils.drawDeleteIndicator(c, viewHolder, dX, actionState);
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
             @Override
