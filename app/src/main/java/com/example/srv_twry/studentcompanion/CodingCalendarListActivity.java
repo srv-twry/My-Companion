@@ -8,9 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.example.srv_twry.studentcompanion.Fragments.CodingCalendarListFragment;
@@ -50,8 +54,10 @@ public class CodingCalendarListActivity extends AppCompatActivity implements Cod
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_coding_calendar_list);
         setTitle(getResources().getString(R.string.coding_calendar));
+        ActionBar actionBar = getActionBar();
 
         ButterKnife.bind(this);
 
@@ -111,6 +117,24 @@ public class CodingCalendarListActivity extends AppCompatActivity implements Cod
         }
 
         return newAccount;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_coding_calendar_settings, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.settings:
+                // I will here add the code to filter
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
