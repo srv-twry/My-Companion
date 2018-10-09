@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -93,26 +94,29 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
                 final int id = (int) viewHolder.itemView.getTag();
                 final String topicName = ((TextView)viewHolder.itemView.findViewById(R.id.tv_flash_cards_topics_item_name)).getText().toString();
 
-                //Show the alert dialog
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(FlashCardsHomeActivity.this);
-                alertDialog.setTitle(R.string.confirm_delete_alert_dialog);
-                alertDialog.setMessage(R.string.are_you_sure_you_want_to_delete_this);
-                alertDialog.setIcon(R.drawable.ic_delete_forever_black);
+                final Snackbar snackbar = Snackbar.make(flashCardsRecyclerView  , R.string.delete_flash_card , Snackbar.LENGTH_LONG);
 
-                alertDialog.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int which) {
-                        deleteTopicFromDatabase(id,topicName);
+
+        //made changes to delete option to confirm delete by snack bar rather than alert dialog box
+
+                snackbar.setAction(R.string.undo_flash_card_delete, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        snackbar.dismiss();
+                        flashCardsTopicsRecyclerViewCursorAdapter.notifyDataSetChanged();
                     }
                 });
+                snackbar.addCallback(new Snackbar.Callback(){
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        if(event != DISMISS_EVENT_ACTION  && event != DISMISS_EVENT_MANUAL) {
 
-                alertDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        getSupportLoaderManager().restartLoader(TOPICS_LOADER_ID, null, FlashCardsHomeActivity.this);
-                        dialog.cancel();
+                            deleteTopicFromDatabase(id, topicName);
+                        }
                     }
                 });
-
-                alertDialog.show();
+                snackbar.show();
 
             }
         }).attachToRecyclerView(flashCardsRecyclerView);

@@ -101,4 +101,6 @@
     <string name="camera">Camera</string>
     <string name="please_wait">Please Wait</string>
     <string name="creating_pdf_double_dot">Creating PDF...</string>
+    <string name="delete_flash_card">Deleted</string>
+    <string name="undo_flash_card_delete">UNDO</string>
 </resources>
