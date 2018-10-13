@@ -16,6 +16,8 @@ import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.R;
 import com.example.srv_twry.studentcompanion.ShowFlashCardsActivity;
 
+import timber.log.Timber;
+
 /**
  * Created by srv_twry on 25/6/17.
  * A simple class to represent a flash card
@@ -112,13 +114,13 @@ public class FlashCard implements Parcelable {
         int questionIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry.FLASH_CARD_QUESTION);
         int answerIndex = mCursor.getColumnIndex(DatabaseContract.FlashCardsEntry.FLASH_CARD_ANSWER);
 
-        Log.d(tag,"" + IDIndex + topicNameIndex + questionIndex + answerIndex );
+        Timber.d(tag + " " + IDIndex + topicNameIndex + questionIndex + answerIndex );
 
 
 
-        Log.d(tag,"" + mCursor.getPosition() + mCursor.getCount());
+        Timber.d(tag + " " + mCursor.getPosition() + mCursor.getCount());
         if (mCursor.getPosition()>=0 || mCursor.moveToNext()) {
-            Log.d(tag,"" + mCursor.getPosition() + mCursor.getCount());
+            Timber.d(tag + " " + mCursor.getPosition() + mCursor.getCount());
 
             int contentID = mCursor.getInt(IDIndex);
             String topicName = mCursor.getString(topicNameIndex);

@@ -15,6 +15,8 @@ import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.POJOs.Contest;
 import com.example.srv_twry.studentcompanion.R;
 
+import timber.log.Timber;
+
 import static android.content.Context.ALARM_SERVICE;
 
 /**
@@ -38,7 +40,7 @@ public class SubscribedContestUtilities {
         Uri uri = context.getContentResolver().insert(DatabaseContract.SubscribedContestEntry.CONTENT_URI_SUBSCRIBED_CONTESTS,contentValues);
 
         if (uri !=null){
-            Log.v("Subscribe Contest","successfully added "+ mContest.getTitle());
+            Timber.v("[Subscribe Contest] successfully added "+ mContest.getTitle());
             Toast toast = Toast.makeText(context, R.string.reminder_set_successfully,Toast.LENGTH_SHORT);
             toast.show();
         }

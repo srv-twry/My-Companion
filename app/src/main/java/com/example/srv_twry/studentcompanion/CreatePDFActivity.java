@@ -14,7 +14,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CreatePDFActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean> {
 
@@ -153,7 +153,7 @@ public class CreatePDFActivity extends AppCompatActivity implements LoaderManage
             ArrayList<Image> images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
             for (Image image: images){
                 imageUri.add(image.getPath());
-                Log.v(getString(R.string.adding_images),image.getName());
+                Timber.v(getString(R.string.adding_images) + " " + image.getName());
             }
             Toast.makeText(this, R.string.images_added,Toast.LENGTH_SHORT).show();
         }
@@ -178,19 +178,19 @@ public class CreatePDFActivity extends AppCompatActivity implements LoaderManage
                 //Show the dialog to wait.
                 progressDialog.show();
                 forceLoad();
-                Log.v("Loader","Started Loader");
+                Timber.v("[Loader] Started Loader");
             }
 
             @Override
             public Boolean loadInBackground() {
                 //Create the pdf here
-                Log.v("Loader","Started loadInBackground");
+                Timber.v("[Loader] Started loadInBackground");
                 //create or open the folder
                 File pdfFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/"+ getResources().getString(R.string.created_pdf)+"/");
                 if (!pdfFolder.exists()) {
                     pdfFolder.mkdir();
                 }
-                Log.v("Loader","Created pdf folder");
+                Timber.v("[Loader] Created pdf folder");
                 String path = Environment.getExternalStorageDirectory().getAbsolutePath() +"/"+ getResources().getString(R.string.created_pdf)+"/";
                 File file = new File(path);
 
@@ -207,7 +207,7 @@ public class CreatePDFActivity extends AppCompatActivity implements LoaderManage
 
                     //opening the document
                     document.open();
-                    Log.v("Loader","opened document");
+                    Timber.v("[Loader] opened document");
 
                     for (int i = 0; i < imageUri.size(); i++) {
 
@@ -238,7 +238,7 @@ public class CreatePDFActivity extends AppCompatActivity implements LoaderManage
                 }finally {
                     document.close();
                     progressDialog.dismiss();
-                    Log.v("Loader","closed document "+ path);
+                    Timber.v("[Loader] closed document "+ path);
                 }
 
                 return Boolean.TRUE;
@@ -249,7 +249,7 @@ public class CreatePDFActivity extends AppCompatActivity implements LoaderManage
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
         imageUri.clear();
-        Log.v("Loader","Done");
+        Timber.v("[Loader] Done");
         finish();
     }
 

@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import timber.log.Timber;
+
 /**
  * Created by srv_twry on 20/6/17.
  * The content provider for the SQLite database.
@@ -156,14 +158,14 @@ public class DatabaseContentProvider extends ContentProvider {
         switch (match){
             case CONTESTS:
                 itemsDeleted = db.delete(DatabaseContract.ContestEntry.TABLE_NAME_CONTESTS,null,null);
-                Log.v("ContentProvider","All the previous contests deleted i.e. "+ itemsDeleted + " contests");
+                Timber.v("[ContentProvider] All the previous contests deleted i.e. "+ itemsDeleted + " contests");
                 break;
 
             case SUBSCRIBED_CONTESTS_INDIVIDUAL:
                 stringIds = uri.getPathSegments().get(1);
                 itemsDeleted = db.delete(DatabaseContract.SubscribedContestEntry.TABLE_NAME_SUBSCRIBED_CONTESTS,"_id=?", new String[]{stringIds});
                 if (itemsDeleted >0){
-                    Log.v("ContentProvider ","Deleted id="+stringIds + " from the database");
+                    Timber.v("[ContentProvider] Deleted id="+stringIds + " from the database");
                 }
 
                 break;
@@ -171,21 +173,21 @@ public class DatabaseContentProvider extends ContentProvider {
             case FLASH_CARDS_TOPICS_INDIVIDUAL:
                 stringIds = uri.getPathSegments().get(1);
                 itemsDeleted = db.delete(DatabaseContract.FlashCardsTopicsEntry.TABLE_NAME_FLASH_CARDS_TOPICS,"_id=?", new String[]{stringIds});
-                Log.v("ContentProvider ","Deleted id="+stringIds + " from the database");
+                Timber.v("[ContentProvider] Deleted id="+stringIds + " from the database");
                 break;
 
             case FLASH_CARDS_TOPICS_INDIVIDUAL_BY_NAME:
                 stringIds = uri.getPathSegments().get(1);
                 itemsDeleted = db.delete(DatabaseContract.FlashCardsEntry.TABLE_NAME_FLASH_CARDS,DatabaseContract.FlashCardsEntry.FLASH_CARD_TOPIC_NAME+ "=?",new String[]{stringIds});
                 if (itemsDeleted >0){
-                    Log.v("ContentProvider ","Deleted id="+stringIds + " from the database");
+                    Timber.v("[ContentProvider] Deleted id="+stringIds + " from the database");
                 }
                 break;
 
             case FLASH_CARDS_INDIVIDUAL:
                 stringIds = uri.getPathSegments().get(1);
                 itemsDeleted = db.delete(DatabaseContract.FlashCardsEntry.TABLE_NAME_FLASH_CARDS,"_id=?", new String[]{stringIds});
-                Log.v("ContentProvider ","Deleted id="+stringIds + " from the database");
+                Timber.v("[ContentProvider] Deleted id="+stringIds + " from the database");
                 break;
 
             default:

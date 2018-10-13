@@ -4,17 +4,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 import static com.example.srv_twry.studentcompanion.Database.DatabaseContract.FlashCardsTopicsEntry.FLASH_CARDS_TOPIC_PRIORITY;
 import static com.example.srv_twry.studentcompanion.ShowFlashCardsActivity.INTENT_EXTRA_TOPIC_NAME;
@@ -38,7 +38,6 @@ import static com.example.srv_twry.studentcompanion.ShowFlashCardsActivity.INTEN
 public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> ,
         FlashCardsTopicsRecyclerViewCursorAdapter.FlashCardsTopicRecyclerViewOnClickListener{
 
-    private static final String TAG = FlashCardsHomeActivity.class.getSimpleName();
     private static final int TOPICS_LOADER_ID = 300;
 
     @BindView(R.id.fab_add_flash_cards_topics)
@@ -158,7 +157,7 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
                     return getContentResolver().query(DatabaseContract.FlashCardsTopicsEntry.CONTENT_URI_FLASH_CARDS_TOPICS,
                             null,null,null,FLASH_CARDS_TOPIC_PRIORITY);
                 }catch(Exception e){
-                    Log.e(TAG, "Failed to asynchronously load data.");
+                    Timber.e("Failed to asynchronously load data.");
                     e.printStackTrace();
                     return null;
                 }
@@ -168,7 +167,7 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(TAG,"Loading completed");
+        Timber.v("Loading completed");
         if (data.getCount() == 0){
             messageShowFlashCardTopics.setVisibility(View.VISIBLE);
         }
@@ -186,7 +185,7 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
     //Method to open all the flash cards with the topicName
     @Override
     public void onFlashCardTopicClicked(String topicName) {
-        Log.v(TAG,"Clicked topic with Name: "+topicName);
+        Timber.v("Clicked topic with Name: "+topicName);
         Intent intent = new Intent(FlashCardsHomeActivity.this,ShowFlashCardsActivity.class);
         intent.putExtra(INTENT_EXTRA_TOPIC_NAME,topicName);
         startActivity(intent);
@@ -209,7 +208,7 @@ public class FlashCardsHomeActivity extends AppCompatActivity implements LoaderM
             getSupportLoaderManager().restartLoader(TOPICS_LOADER_ID, null, this);
         }else{
             if (resultTwo <0){
-                Log.v(TAG,getString(R.string.error_in_deleting_cards));
+                Timber.v(getString(R.string.error_in_deleting_cards));
             }
             Toast.makeText(this, R.string.unable_to_delete_topic,Toast.LENGTH_SHORT).show();
         }

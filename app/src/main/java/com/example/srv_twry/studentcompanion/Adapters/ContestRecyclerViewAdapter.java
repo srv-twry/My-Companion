@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Created by srv_twry on 18/6/17.
@@ -89,7 +90,7 @@ public class ContestRecyclerViewAdapter extends RecyclerView.Adapter<ContestRecy
                 urlPlatform = new URL(url);
                 //get the platform of the contest.
                 String platformString = urlPlatform.getHost();
-                Log.v("ContestRecyclerViewAdap",platformString);
+                Timber.v("ContestRecyclerViewAdap " + platformString);
 
                 if (platformString.equals("www.topcoder.com")){
                     contestPlatform.setImageResource(R.mipmap.topcoder_logo);

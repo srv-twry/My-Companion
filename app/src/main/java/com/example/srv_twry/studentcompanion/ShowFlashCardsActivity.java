@@ -1,24 +1,18 @@
 package com.example.srv_twry.studentcompanion;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.DragAndDropPermissions;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Adapters.FlashCardsRecyclerViewCursorAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
@@ -26,6 +20,7 @@ import com.example.srv_twry.studentcompanion.POJOs.FlashCard;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 /*
 *  This activity shows the flash cards associated with a certain flash card topic.
 * */
@@ -34,7 +29,6 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
 
     private static final int FLASH_CARDS_LOADER_ID = 400;
     public static final String INTENT_EXTRA_TOPIC_NAME = "intentExtraTopicName";
-    private static final String TAG = ShowFlashCardsActivity.class.getSimpleName();
     public static final String INTENT_EXTRA_FLASH_CARD = "intentExtraFlashCard";
 
     @BindView(R.id.rv_flash_cards)
@@ -161,7 +155,7 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
                     return getContentResolver().query(DatabaseContract.FlashCardsEntry.CONTENT_URI_FLASH_CARDS,
                             null,selection,selectionArgs,null);
                 }catch(Exception e){
-                    Log.e(TAG, "Failed to asynchronously load data.");
+                    Timber.e("Failed to asynchronously load data.");
                     e.printStackTrace();
                     return null;
                 }
@@ -175,7 +169,7 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
             messageShowFlashCards.setVisibility(View.VISIBLE);
         }
         flashCardsRecyclerViewCursorAdapter.swapCursor(data);
-        Log.v("Flash card","loading completed for topic "+ topicName);
+        Timber.v("[Flash card] loading completed for topic "+ topicName);
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class PDFCreatorHomeActivity extends AppCompatActivity implements PDFFilesAdapter.onPDFDeleted {
 
@@ -69,12 +70,12 @@ public class PDFCreatorHomeActivity extends AppCompatActivity implements PDFFile
 
         if (filesInDirectory == null){
             //No files in the directory.
-            Log.v("Load files","No files found");
+            Timber.v("[Load files] No files found");
         }else{
             for (File file : filesInDirectory) {
                 if (!file.isDirectory() && file.getName().endsWith(".pdf")) {
                     filePaths.add(file.getPath());
-                    Log.v("addingFile: ", file.getName());
+                    Timber.v("addingFile: " + file.getName());
                 }
             }
         }

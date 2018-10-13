@@ -2,10 +2,13 @@ package com.example.srv_twry.studentcompanion.GoogleAnalytics;
 
 import android.app.Application;
 
+import com.example.srv_twry.studentcompanion.BuildConfig;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+
+import timber.log.Timber;
 
 /**
  * Created by srv_twry on 28/6/17.
@@ -20,6 +23,13 @@ public class MyApplication extends Application {
         public void onCreate() {
             super.onCreate();
             mInstance = this;
+
+            /**
+             * Timber Initialization
+             */
+            if (BuildConfig.DEBUG) {
+                Timber.plant(new Timber.DebugTree());
+            }
 
             AnalyticsTrackers.initialize(this);
             AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);

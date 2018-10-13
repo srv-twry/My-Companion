@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.example.srv_twry.studentcompanion.Services.SetReminderAfterRebootService;
 
+import timber.log.Timber;
+
 /**
  * Created by srv_twry on 22/6/17.
  * The broadcast manager that gets triggered whenever the device reboots so that it can
@@ -22,7 +24,7 @@ public class DeviceRebootBroadcastReceiver extends BroadcastReceiver{
             //start the service here.
             Intent startServiceIntent = new Intent(context, SetReminderAfterRebootService.class);
             context.startService(startServiceIntent);
-            Log.v("Reboot receiver","STARTED SERVICE TO RESCHEDULE THE ALARMS");
+            Timber.v("[Reboot receiver] STARTED SERVICE TO RESCHEDULE THE ALARMS");
         }
 
     }

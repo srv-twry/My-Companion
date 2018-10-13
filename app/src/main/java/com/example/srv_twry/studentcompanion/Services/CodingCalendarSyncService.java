@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.example.srv_twry.studentcompanion.Adapters.CodingCalendarSyncAdapter;
 
+import timber.log.Timber;
+
 /**
  * Created by srv_twry on 20/6/17.
  * Define a Service that returns an IBinder for the
@@ -25,7 +27,7 @@ public class CodingCalendarSyncService extends Service {
         synchronized (sSyncAdapterLock) {
             if (mCodingCalendarSyncAdapter == null) {
                 mCodingCalendarSyncAdapter = new CodingCalendarSyncAdapter(getApplicationContext(), true);
-                Log.v("CodingCalendarSyncAdap","Started sync service.");
+                Timber.v("Started sync service.");
             }
         }
     }

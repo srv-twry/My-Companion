@@ -12,7 +12,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass which contains the list of Active and upcoming contests.
@@ -43,7 +43,6 @@ import butterknife.ButterKnife;
  */
 public class CodingCalendarListFragment extends Fragment implements ContestRecyclerViewAdapter.ContestRecyclerViewOnClickListener, FetchContestsRetrofit.onLoadingFinishedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = CodingCalendarListFragment.class.getSimpleName();
     private static final String RECYCLERVIEW_POSITION = "recyclerView position";
     private Parcelable recyclerViewState;
 
@@ -205,7 +204,7 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
                 try{
                     return getActivity().getContentResolver().query(DatabaseContract.ContestEntry.CONTENT_URI_CONTESTS,null,null,null,null);
                 } catch (Exception e) {
-                    Log.e(TAG, "Failed to asynchronously load data.");
+                    Timber.e("Failed to asynchronously load data.");
                     e.printStackTrace();
                     return null;
                 }
@@ -276,8 +275,8 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
             //result = cal.getTime();
             sdf.setTimeZone(tz);
             result = sdf.parse(string);
-            Log.v(TAG,string);
-            Log.v(TAG,result.toString());
+            Timber.v(string);
+            Timber.v(result.toString());
         }catch (ParseException e){
             e.printStackTrace();
             return null;

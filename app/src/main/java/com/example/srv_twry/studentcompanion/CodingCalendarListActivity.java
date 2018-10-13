@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,13 +18,13 @@ import com.example.srv_twry.studentcompanion.POJOs.Contest;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /*
 * This activity contains the coding contest lists for phones and The two pane layout for the tablets.
 * */
 public class CodingCalendarListActivity extends AppCompatActivity implements CodingCalendarListFragment.OnFragmentInteractionListener {
 
-    private static final String TAG = CodingCalendarListActivity.class.getSimpleName();
     public static final String INTENT_EXTRA_TAG = "Contest";
 
     // The authority for the sync adapter's content provider
@@ -104,7 +103,7 @@ public class CodingCalendarListActivity extends AppCompatActivity implements Cod
          * If successful, return the Account object, otherwise report an error.
          */
         if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            Log.v(TAG, "Created the account");
+            Timber.v("Created the account");
 
             // Requesting the first sync after creating the account.
             ContentResolver.requestSync(newAccount, AUTHORITY, Bundle.EMPTY);

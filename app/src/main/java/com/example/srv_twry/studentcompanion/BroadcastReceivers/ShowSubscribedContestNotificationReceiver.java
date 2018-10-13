@@ -15,6 +15,8 @@ import android.util.Log;
 import com.example.srv_twry.studentcompanion.Utilities.DatabaseUtilites;
 import com.example.srv_twry.studentcompanion.Utilities.SubscribedContestUtilities;
 
+import timber.log.Timber;
+
 import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
 
 /**
@@ -27,7 +29,7 @@ public class ShowSubscribedContestNotificationReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.v("Show notF receiver","RECEIVED BROADCAST");
+        Timber.v("[Show notF receiver] RECEIVED BROADCAST");
 
         //Use Notification builder to show notifications.
         String contestTitle = intent.getStringExtra(SubscribedContestUtilities.CONTEST_TITLE);
@@ -59,7 +61,7 @@ public class ShowSubscribedContestNotificationReceiver extends BroadcastReceiver
         // Delete the contest from the database here.
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         int databaseId = sharedPreferences.getInt(contestTitle +" subsDbId",-1);
-        Log.v("Show Notifications",""+ databaseId);
+        Timber.v("[Show Notifications] " + databaseId);
         int deleted= SubscribedContestUtilities.removeContestFromSubscribedDatabase(context,databaseId);
         if (deleted >0){
             //boolean isSetForReminder = false;
@@ -67,7 +69,7 @@ public class ShowSubscribedContestNotificationReceiver extends BroadcastReceiver
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove(contestTitle);
             editor.remove(contestTitle +" subsDbId");
-            Log.v("Show Notifications","DELETED SHARED PREFERENCES");
+            Timber.v("[Show Notifications] DELETED SHARED PREFERENCES");
             //editor.putBoolean(contestTitle,isSetForReminder);
             //editor.putInt(contestTitle+" subsDbId",databaseId);
             editor.apply();
