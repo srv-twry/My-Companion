@@ -200,6 +200,18 @@ public class DatabaseContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not implemented");
+
+        int match = uriMatcher.match(uri);
+        SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
+
+        switch(match){
+            case FLASH_CARDS:
+                return database.update(DatabaseContract.FlashCardsEntry.TABLE_NAME_FLASH_CARDS ,
+                        values , selection , selectionArgs);
+
+            default:
+                throw new UnsupportedOperationException("Not implemented");
+        }
+
     }
 }
