@@ -112,7 +112,7 @@ public class AddFlashCardActivity extends AppCompatActivity {
 
     private void prepareEditLayout(){
 
-        long id = getIntent().getExtras().getLong(AddFlashCardActivity.FLASH_CARD_ID);
+        final long id = getIntent().getExtras().getLong(AddFlashCardActivity.FLASH_CARD_ID);
         Cursor cursor = null;
         try {
              cursor = getContentResolver().query(DatabaseContract.FlashCardsEntry.CONTENT_URI_FLASH_CARDS, null,
@@ -130,6 +130,13 @@ public class AddFlashCardActivity extends AppCompatActivity {
 
         button.setText("Update");
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickUpdateTask(id);
+            }
+        });
+
     }
 
     private void prepareSaveLayout(){
@@ -139,5 +146,43 @@ public class AddFlashCardActivity extends AppCompatActivity {
                 onClickAddTask();
             }
         });
+    }
+
+    private void onClickUpdateTask(final long id){
+
+        new AsyncTask(){
+            @Override
+            protected Object doInBackground(Object[] objects) {
+
+                //We don't want empty topics in the database hence this check
+                String inputQuestion = questionEditText.getText().toString();
+                String inputAnswer = answerEditText.getText().toString();
+                if (inputQuestion.length() == 0 || inputAnswer.length() == 0) {
+                    AddFlashCardActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getBaseContext(), R.string.both_the_fields_are_mandatory,Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    return null;
+                }
+
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put(DatabaseContract.FlashCardsEntry.FLASH_CARD_TOPIC_NAME, topicName);
+                contentValues.put(DatabaseContract.FlashCardsEntry.FLASH_CARD_QUESTION, inputQuestion);
+                contentValues.put(DatabaseContract.FlashCardsEntry.FLASH_CARD_ANSWER,inputAnswer);
+
+                getContentResolver().update(DatabaseContract.FlashCardsEntry.CONTENT_URI_FLASH_CARDS , contentValues ,
+                        DatabaseContract.FlashCardsEntry._ID + " =? " , new String[]{Long.toString(id)});
+
+                return null;
+            }
+        }.execute();
+
+        //Returning to the FlashCardsHomeActivity
+        finish();
+
     }
 }
