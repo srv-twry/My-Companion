@@ -6,7 +6,12 @@
     <item
         android:id="@+id/flashcard_delete"
         android:title="Delete"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
+    <item
+        android:id="@+id/flashcard_edit"
+        app:showAsAction="never"
+        android:title="Edit"/>
+
 
 </menu>

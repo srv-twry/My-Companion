@@ -61,6 +61,8 @@ public class ShowFlashCardDetailsActivity extends AppCompatActivity {
             case (R.id.flashcard_delete):
                 FlashCard.getFlashCardFromID(this,mFlashCard.getContentID()).deleteFromDB(this,true);
                 return true;
+            case R.id.flashcard_edit:
+
 
             default:
                 return super.onOptionsItemSelected(item);
