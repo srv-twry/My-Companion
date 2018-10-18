@@ -65,6 +65,7 @@ public class ShowFlashCardDetailsActivity extends AppCompatActivity {
                 Intent intent = new Intent(this , AddFlashCardActivity.class);
                 intent.putExtra(AddFlashCardActivity.INTENT_ACTION , AddFlashCardActivity.INTENT_ACTION_EDIT);
                 intent.putExtra(AddFlashCardActivity.FLASH_CARD_ID , mFlashCard.getContentID());
+                intent.putExtra(ShowFlashCardsActivity.INTENT_EXTRA_TOPIC_NAME, mFlashCard.getTopicName());
                 startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);

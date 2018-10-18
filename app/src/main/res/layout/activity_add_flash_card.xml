@@ -44,7 +44,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/action_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
 
     <!-- Add button -->
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/action_button"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="295dp"
         android:layout_height="wrap_content"
@@ -71,7 +71,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/colorPrimary"
-        android:onClick="onClickAddTask"
         android:text="@string/add"
         android:textColor="@android:color/primary_text_dark"
         app:layout_constraintBottom_toBottomOf="parent"

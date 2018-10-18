@@ -1,7 +1,6 @@
 package com.example.srv_twry.studentcompanion.POJOs;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.R;
-import com.example.srv_twry.studentcompanion.ShowFlashCardsActivity;
 
 /**
  * Created by srv_twry on 25/6/17.
@@ -47,7 +45,7 @@ public class FlashCard implements Parcelable {
         return answer;
     }
 
-    public int getContentID() {
+    public long getContentID() {
         return contentID;
     }
 
@@ -131,7 +129,7 @@ public class FlashCard implements Parcelable {
 
     }
 
-    public static FlashCard getFlashCardFromID(Context parentContext, int contentID){
+    public static FlashCard getFlashCardFromID(Context parentContext, long contentID){
 
         //TODO: Check for invalid input
         String[] projection = {
