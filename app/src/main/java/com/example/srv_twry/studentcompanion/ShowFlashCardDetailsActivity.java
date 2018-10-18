@@ -62,8 +62,9 @@ public class ShowFlashCardDetailsActivity extends AppCompatActivity {
                 FlashCard.getFlashCardFromID(this,mFlashCard.getContentID()).deleteFromDB(this,true);
                 return true;
             case R.id.flashcard_edit:
-
-
+                Intent intent = new Intent(this , AddFlashCardActivity.class);
+                intent.putExtra(AddFlashCardActivity.INTENT_ACTION , AddFlashCardActivity.INTENT_ACTION_EDIT);
+                intent.putExtra(AddFlashCardActivity.FLASH_CARD_ID , mFlashCard.getContentID());
             default:
                 return super.onOptionsItemSelected(item);
         }

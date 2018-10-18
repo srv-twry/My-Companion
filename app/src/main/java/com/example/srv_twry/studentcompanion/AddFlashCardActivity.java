@@ -17,6 +17,12 @@ public class AddFlashCardActivity extends AppCompatActivity {
 
     private String topicName;
 
+    public static final String INTENT_ACTION = "action";
+    public static final String INTENT_ACTION_EDIT = "edit";
+    public static final String INTENT_ACTION_SAVE = "save";
+    public static final String FLASH_CARD_ID = "id";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
