@@ -187,6 +187,7 @@ public class ShowFlashCardsActivity extends AppCompatActivity implements LoaderM
     public void onFlashCardClicked(FlashCard flashCard) {
         Intent intent = new Intent(ShowFlashCardsActivity.this,ShowFlashCardDetailsActivity.class);
         intent.putExtra(INTENT_EXTRA_FLASH_CARD,flashCard);
+        intent.putExtra(AddFlashCardActivity.INTENT_ACTION , AddFlashCardActivity.INTENT_ACTION_SAVE);
         startActivity(intent);
     }
 }
