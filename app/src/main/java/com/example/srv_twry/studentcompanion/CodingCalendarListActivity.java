@@ -9,12 +9,23 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Fragments.CodingCalendarListFragment;
 import com.example.srv_twry.studentcompanion.Fragments.ContestDetailFragment;
 import com.example.srv_twry.studentcompanion.POJOs.Contest;
+
+import static com.example.srv_twry.studentcompanion.R.menu.main_menu;
+import static com.example.srv_twry.studentcompanion.R.id.action_filter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,17 +54,44 @@ public class CodingCalendarListActivity extends AppCompatActivity implements Cod
 
     // Instance fields
     private Account mAccount;
+    private CodingCalendarListFragment mCodingCalenderListFragment;
     @Nullable @BindView(R.id.tv_click_contest_message)
     TextView clickContestMessage;
 
+    private LinearLayout mHiddenSpinner;
+    private Spinner mCategorySpinner;
+    private String Category = "";
+    private Boolean mIsSpinnerFirstCall = Boolean.FALSE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coding_calendar_list);
         setTitle(getResources().getString(R.string.coding_calendar));
-
+        mCodingCalenderListFragment = new CodingCalendarListFragment();
         ButterKnife.bind(this);
+        mHiddenSpinner = (LinearLayout) findViewById(R.id.hiddenSpinner);
+        mCategorySpinner = (Spinner) findViewById(R.id.categorySpinner);
+        ArrayAdapter<String> categorys=new ArrayAdapter<String>(CodingCalendarListActivity.this,android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.category_arrays));
+        categorys.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mCategorySpinner.setAdapter(categorys);
+        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Category = mCategorySpinner.getItemAtPosition(i).toString();
+                if(mIsSpinnerFirstCall) {
+                    if (Category != "") {
+                        Log.d(INTENT_EXTRA_TAG, Category);
+                       oncreateFragment();
+                    }
+                }
+                mIsSpinnerFirstCall =Boolean.TRUE;
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         //Only create a fragment when their isn't one.
         if (savedInstanceState == null) {
             CodingCalendarListFragment codingCalendarListFragment = CodingCalendarListFragment.newInstance();
@@ -68,7 +106,14 @@ public class CodingCalendarListActivity extends AppCompatActivity implements Cod
 
 
     }
-
+    public void oncreateFragment(){
+        CodingCalendarListFragment codingCalendarListFragment = CodingCalendarListFragment.newInstance();
+        FragmentManager fragmentManager1 = getSupportFragmentManager();
+        fragmentManager1.beginTransaction().replace(R.id.frame_layout_coding_calendar_list, codingCalendarListFragment).addToBackStack(null).commit();
+    }
+    public String getCategory () {
+        return  Category;
+    }
     // In case of phones it will start the ContestDetailActivity while in case of tablets it will contact ContestDetailFragment for details.
     @Override
     public void onListFragmentInteraction(Contest clickedContest) {
@@ -110,6 +155,21 @@ public class CodingCalendarListActivity extends AppCompatActivity implements Cod
         }
 
         return newAccount;
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        if(item.getItemId() == action_filter)
+        {
+            mHiddenSpinner.setVisibility(View.VISIBLE);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

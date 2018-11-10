@@ -101,4 +101,11 @@
     <string name="camera">Camera</string>
     <string name="please_wait">Please Wait</string>
     <string name="creating_pdf_double_dot">Creating PDF...</string>
+    <string-array name="category_arrays">
+        <item></item>
+        <item>Codeforces</item>
+        <item>Codechef</item>
+        <item>Topcoder</item>
+        <item>Others</item>
+    </string-array>
 </resources>

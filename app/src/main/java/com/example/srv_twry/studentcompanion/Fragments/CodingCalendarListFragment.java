@@ -1,5 +1,6 @@
 package com.example.srv_twry.studentcompanion.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -12,12 +13,15 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Adapters.ContestRecyclerViewAdapter;
+import com.example.srv_twry.studentcompanion.CodingCalendarListActivity;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.Network.FetchContestsRetrofit;
 import com.example.srv_twry.studentcompanion.POJOs.Contest;
@@ -45,6 +49,7 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
 
     private static final String RECYCLERVIEW_POSITION = "recyclerView position";
     private Parcelable recyclerViewState;
+    private String Category;
 
     private OnFragmentInteractionListener mListener;
     private ArrayList<Contest> contestArrayList = new ArrayList<>();
@@ -53,7 +58,7 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
     @BindView(R.id.rv_contest_list)
     RecyclerView contestRecyclerView;
     private GridLayoutManager gridLayoutManager;
-
+    private  CodingCalendarListActivity mCodingCalendarListActivity;
     private static final int CONTEST_LOADER_ID = 100;
 
     public CodingCalendarListFragment() {
@@ -76,7 +81,8 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_coding_calendar_list, container, false);
         ButterKnife.bind(this,view);
-
+        mCodingCalendarListActivity = (CodingCalendarListActivity) getActivity();
+        Category = mCodingCalendarListActivity.getCategory();
         if (savedInstanceState != null){
             recyclerViewState = savedInstanceState.getParcelable(RECYCLERVIEW_POSITION);
         }
@@ -239,18 +245,48 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
         int startTimeColumnIndex = data.getColumnIndex(DatabaseContract.ContestEntry.CONTEST_COLUMN_START_TIME);
         int endTimeColumnIndex = data.getColumnIndex(DatabaseContract.ContestEntry.CONTEST_COLUMN_END_TIME);
 
-        for(int i=0; i< data.getCount();i++){
+        for(int i=0; i< data.getCount();i++) {
             data.moveToPosition(i);
-            String title = data.getString(titleColumnIndex);
-            String description= data.getString(descriptionColumnIndex);
-            String url = data.getString(urlColumnIndex);
-            String start = data.getString(startTimeColumnIndex);
-            String end = data.getString(endTimeColumnIndex);
+            if (Category == null) {
+                    String title = data.getString(titleColumnIndex);
+                    String description = data.getString(descriptionColumnIndex);
+                    String url = data.getString(urlColumnIndex);
+                    String start = data.getString(startTimeColumnIndex);
+                    String end = data.getString(endTimeColumnIndex);
 
-            Date startTime = getDateFromString(start);
-            Date endTime = getDateFromString(end);
+                    Date startTime = getDateFromString(start);
+                    Date endTime = getDateFromString(end);
 
-            returnArrayList.add(new Contest(title,description,url,startTime,endTime));
+                    returnArrayList.add(new Contest(title, description, url, startTime, endTime));
+            }
+            else if (Category.equals("Others")) {
+                if (!data.getString(titleColumnIndex).contains("Codeforces") && !data.getString(titleColumnIndex).contains("Codechef") && !data.getString(titleColumnIndex).contains("Topcoder") ) {
+                    String title = data.getString(titleColumnIndex);
+                    String description = data.getString(descriptionColumnIndex);
+                    String url = data.getString(urlColumnIndex);
+                    String start = data.getString(startTimeColumnIndex);
+                    String end = data.getString(endTimeColumnIndex);
+
+                    Date startTime = getDateFromString(start);
+                    Date endTime = getDateFromString(end);
+
+                    returnArrayList.add(new Contest(title, description, url, startTime, endTime));
+                }
+            }
+            else{
+                if (data.getString(titleColumnIndex).contains(Category)) {
+                    String title = data.getString(titleColumnIndex);
+                    String description = data.getString(descriptionColumnIndex);
+                    String url = data.getString(urlColumnIndex);
+                    String start = data.getString(startTimeColumnIndex);
+                    String end = data.getString(endTimeColumnIndex);
+
+                    Date startTime = getDateFromString(start);
+                    Date endTime = getDateFromString(end);
+
+                    returnArrayList.add(new Contest(title, description, url, startTime, endTime));
+                }
+            }
         }
         return returnArrayList;
     }
