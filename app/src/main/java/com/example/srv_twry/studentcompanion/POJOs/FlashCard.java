@@ -1,20 +1,18 @@
 package com.example.srv_twry.studentcompanion.POJOs;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import androidx.appcompat.app.AlertDialog;
+
 import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
 import com.example.srv_twry.studentcompanion.R;
-import com.example.srv_twry.studentcompanion.ShowFlashCardsActivity;
 
 import timber.log.Timber;
 

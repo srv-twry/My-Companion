@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:visibility="visible"
         app:layout_constraintVertical_bias="0.453" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_contest_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -27,6 +27,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

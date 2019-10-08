@@ -9,15 +9,14 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import androidx.core.app.NotificationCompat;
 
 import com.example.srv_twry.studentcompanion.Utilities.DatabaseUtilites;
 import com.example.srv_twry.studentcompanion.Utilities.SubscribedContestUtilities;
 
 import timber.log.Timber;
 
-import static android.support.v4.app.NotificationCompat.PRIORITY_MAX;
+import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
 
 /**
  * Created by srv_twry on 21/6/17.
