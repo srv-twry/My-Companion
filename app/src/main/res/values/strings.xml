@@ -101,4 +101,5 @@
     <string name="camera">Camera</string>
     <string name="please_wait">Please Wait</string>
     <string name="creating_pdf_double_dot">Creating PDF...</string>
+    <string name="filter_by_platform">Filter by Platform</string>
 </resources>
