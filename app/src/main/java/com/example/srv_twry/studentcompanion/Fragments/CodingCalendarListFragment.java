@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -13,9 +14,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.srv_twry.studentcompanion.Adapters.ContestRecyclerViewAdapter;
 import com.example.srv_twry.studentcompanion.Database.DatabaseContract;
@@ -26,6 +31,8 @@ import com.example.srv_twry.studentcompanion.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -53,6 +60,7 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
     @BindView(R.id.rv_contest_list)
     RecyclerView contestRecyclerView;
     private GridLayoutManager gridLayoutManager;
+    private ContestRecyclerViewAdapter contestRecyclerViewAdapter;
 
     private static final int CONTEST_LOADER_ID = 100;
 
@@ -89,6 +97,12 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
         contestRecyclerView.setAdapter(contestRecyclerViewAdapter);
         contestRecyclerView.setLayoutManager(gridLayoutManager);
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     private void startLoadingData() {
@@ -216,7 +230,7 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data !=null){
             contestArrayList = convertCursorToArrayList(data);
-            ContestRecyclerViewAdapter contestRecyclerViewAdapter = new ContestRecyclerViewAdapter(contestArrayList,this);
+            contestRecyclerViewAdapter = new ContestRecyclerViewAdapter(contestArrayList,this);
             contestRecyclerView.setAdapter(contestRecyclerViewAdapter);
             contestRecyclerView.invalidate();
             loadingContestsProgressBar.setVisibility(View.GONE);
@@ -227,6 +241,16 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
                 gridLayoutManager.onRestoreInstanceState(recyclerViewState);
             }
         }
+    }
+
+    private void sortContestArrayList(ArrayList<Contest> contests) {
+        Collections.sort(contests, new Comparator<Contest>() {
+            @Override
+            public int compare(Contest contest, Contest t1) {
+                return contest.getTitle().compareTo(t1.getTitle());
+            }
+        });
+        contestRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     // To convert the cursor to an array list
@@ -284,4 +308,20 @@ public class CodingCalendarListFragment extends Fragment implements ContestRecyc
         return result;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.coding_calendar_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.filter_calendar_list) {
+            //Toast.makeText(getActivity(), "Options clicked", Toast.LENGTH_SHORT).show();
+            sortContestArrayList(contestArrayList);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
