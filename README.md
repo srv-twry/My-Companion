@@ -20,6 +20,7 @@ This project will be continuously improved and new features will be added to mak
     2. Details of each contest
     3. Ability to set reminders
     4. Ability to share the contest link and description
+    5. Report of the performance
     
 + Flash Cards
     1. Create and organise flash cards according to topics and priority
